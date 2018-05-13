@@ -17,6 +17,8 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="configuration" ref="configuration"/>
         <property name="mapperLocations" value="classpath:com/lsh/demo/mapper/*.xml"/>
+        <property name="databaseIdProvider" ref="databaseIdProvider"/>
+        <property name="typeAliasesPackage" value="com.lsh.demo.pojo"/>
     </bean>
 
     <!--代替了mybatis自己的配置文件中的setting-->
@@ -32,6 +34,15 @@
         <property name="mapUnderscoreToCamelCase" value="true"/>
     </bean>
 
+    <!--数据库厂商标识 别名-->
+    <bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider">
+        <property name="properties">
+            <props>
+                <prop key="MySQL">mysql</prop>
+            </props>
+        </property>
+    </bean>
+
     <!--映射器配置类-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.lsh.demo.mapper"/>
@@ -43,7 +54,7 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <tx:annotation-driven />
 
 
 </beans>

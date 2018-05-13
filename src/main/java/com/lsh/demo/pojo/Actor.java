@@ -1,6 +1,7 @@
 package com.lsh.demo.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 public class Actor {
 
@@ -12,7 +13,7 @@ public class Actor {
 
     private Date lastUpdate;
 
-
+    private List<Film> filmList;
 
 
 
@@ -46,5 +47,13 @@ public class Actor {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public List<Film> getFilmList() {
+        return filmList;
+    }
+
+    public void setFilmList(List<Film> filmList) {
+        this.filmList = filmList;
     }
 }

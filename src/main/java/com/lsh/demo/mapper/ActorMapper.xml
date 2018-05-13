@@ -15,15 +15,8 @@
     </sql>
 
     <select id="getActorById"
-            parameterType="int"
-            useCache="false"
-            flushCache="false"
-            resultType="Actor"
-            timeout="1000"
-            fetchSize="256"
-            statementType="PREPARED"
-            resultOrdered="false"
-            databaseId="mysql">
+            parameterType="integer"
+            resultMap="Actor">
         select
             <include refid="actorFields"><property name="alias" value="a"/></include>
         from actor a where actor_id = #{id}
@@ -31,19 +24,19 @@
 
     <insert id="addActor"
             parameterType="com.lsh.demo.pojo.Actor"
-            useGeneratedKeys="false"
+            useGeneratedKeys="true"
             keyProperty="actorId"
-            keyColumn="actor_id"
-            statementType="PREPARED">
+            keyColumn="actor_id">
         insert into actor (first_name,last_name,last_update)
           values (#{firstName},#{lastName},#{lastUpdate,javaType=java.util.Date});
         <selectKey keyColumn="actor_id"
                    keyProperty="actorId"
                    order="AFTER"
                    resultType="integer"
-                   statementType="PREPARED"
-                   databaseId="mysql">
-            select last_insert_id() as actor_id;
+                   statementType="PREPARED">
+            <if test="_databaseId == 'mysql'">
+                select last_insert_id() as actor_id;
+            </if>
         </selectKey>
     </insert>
 

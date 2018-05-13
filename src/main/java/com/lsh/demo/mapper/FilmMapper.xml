@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lsh.demo.mapper.FilmMapper">
+
+    <resultMap id="Film" type="com.lsh.demo.pojo.Film">
+        <id property="filmId" column="film_id"/>
+        <result property="title" column="title"/>
+        <result property="description" column="description"/>
+        <result property="releaseYear" column="release_year"/>
+        <result property="replacementCost" column="replacement_cost"/>
+        <result property="rating" column="rating" javaType="com.lsh.demo.pojo.FilmRatingEnum"/>
+        <result property="lastUpdate" column="last_update"/>
+        <association property="actor" column="actor_id" columnPrefix="actor_" resultMap="Actor"/>
+        <association property="category" column="category_id" columnPrefix="category_" resultMap="Category"/>
+    </resultMap>
+
+    <resultMap id="Actor" type="com.lsh.demo.pojo.Actor">
+        <id property="actorId" column="actor_id"/>
+        <result property="firstName" column="first_name"/>
+        <result property="lastName" column="last_name"/>
+        <result property="lastUpdate" column="last_update"/>
+    </resultMap>
+
+    <resultMap id="Category" type="com.lsh.demo.pojo.Category">
+        <id property="categoryId" column="category_id"/>
+        <result property="name" column="name"/>
+        <result property="lastUpdate" column="last_update"/>
+    </resultMap>
+
+    <sql id="allFields">
+        f.film_id
+        ,f.title
+        ,f.description
+        ,f.release_year
+        ,f.replacement_cost
+        ,f.rating
+        ,f.last_update
+        ,a.actor_id    actor_actor_id
+        ,a.first_name  actor_first_name
+        ,a.last_name   actor_last_name
+        ,a.last_update actor_last_update
+        ,c2.category_id category_category_id
+        ,c2.name as     category_name
+        ,c2.last_update categroy_last_update
+    </sql>
+
+    <select id="getFilmById" parameterType="integer" resultMap="Film">
+        select
+         <include refid="allFields"></include>
+         from film f
+         left join film_actor fa on f.film_id = fa.film_id
+         left join actor a on fa.actor_id = a.actor_id
+         left join film_category f2 on f.film_id = f2.film_id
+         left join category c2 on f2.category_id = c2.category_id
+        where f.ilm_id = #{id}
+    </select>
+
+    <select id="getFilmAll" resultMap="Film">
+        select
+          <include refid="allFields"></include>
+        from film f
+        left join film_actor fa on f.film_id = fa.film_id
+        left join actor a on fa.actor_id = a.actor_id
+        left join film_category f2 on f.film_id = f2.film_id
+        left join category c2 on f2.category_id = c2.category_id
+    </select>
+
+    <update id="updateFilm" parameterType="Film" >
+        update film
+          <set>
+              <if test="title != null">title = #{title},</if>
+              <if test="description != null">description = #{description},</if>
+              <if test="releaseYear != null">release_year = #{releaseYear},</if>
+              <if test="replacementCost != null">replacement_cost = #{replacementCost},</if>
+              <if test="rating != null">rating = #{rating},</if>
+              <if test="lastUpdate != null">last_update = #{lastUpdate}</if>
+          </set>
+        where
+          film_id = #{filmId}
+    </update>
+
+    <insert id="insertFilm" parameterType="com.lsh.demo.pojo.Film" useGeneratedKeys="true" keyProperty="filmId" keyColumn="film_id">
+        insert into film
+        (title,description,release_year,replacement_cost,rating,last_update)
+        values (#{title},#{description},#{releaseYear},#{replacementCost},#{rating},#{lastUpdate});
+        <selectKey keyColumn="film_id" keyProperty="filmId" databaseId="mysql" order="AFTER">
+            select last_insert_id() as film_id;
+        </selectKey>
+    </insert>
+
+    <delete id="deleteFilm" parameterType="integer" >
+        delete from film where film_id = #{id}
+    </delete>
+
+</mapper>
