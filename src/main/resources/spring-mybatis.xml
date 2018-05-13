@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <context:property-placeholder file-encoding="UTF-8" location="classpath:db.properties"/>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="url" value="${jdbc.url}"/>
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--配置数据源、参数、映射器xml-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configuration" ref="configuration"/>
+        <property name="mapperLocations" value="classpath:com/lsh/demo/mapper/*.xml"/>
+    </bean>
+
+    <!--代替了mybatis自己的配置文件中的setting-->
+    <bean id="configuration" class="org.apache.ibatis.session.Configuration">
+        <property name="cacheEnabled" value="true"/>
+        <property name="localCacheScope" value="SESSION"/>
+        <property name="lazyLoadingEnabled" value="true"/>
+        <property name="aggressiveLazyLoading" value="true"/>
+        <property name="autoMappingBehavior" value="PARTIAL"/>
+        <property name="autoMappingUnknownColumnBehavior" value="WARNING"/>
+        <property name="callSettersOnNulls" value="true"/>
+        <property name="returnInstanceForEmptyRow" value="true"/>
+        <property name="mapUnderscoreToCamelCase" value="true"/>
+    </bean>
+
+    <!--映射器配置类-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.lsh.demo.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!--配置事务驱动-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+
+</beans>

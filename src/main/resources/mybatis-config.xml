@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties>
+        <!--开启默认值功能-->
+        <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/>
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/sakila?useUnicode=true&amp;characterEncoding=utf8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="1234"/>
+    </properties>
+
+    <settings>
+        <!--默认自动测log4j或者slf4j，强制使用log4j-->
+        <setting name="logImpl" value="LOG4J"/>
+        <!--是否开启缓存-->
+        <setting name="cacheEnabled" value="true"/>
+        <!--是否开启一级缓存SESSION：一级缓存 STATEMENT：不缓存每执行一条语句便查询一次-->
+        <setting name="localCacheScope" value="SESSION"/>
+        <!--每个关联对象按需加载-->
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <!--每个属性按需加载-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <!--结果集映射 PARTIAL：局部的-->
+        <setting name="autoMappingBehavior" value="PARTIAL"/>
+        <!--结果集无映射时的处理 NONE:无操作 FAILING:异常 WARNING：警告(需要log4j配置)-->
+        <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
+        <!--开启数据库字段名 驼峰映射-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!--结果字段为空时是否调用setter，对于map会添加个key-->
+        <setting name="callSettersOnNulls" value="true"/>
+        <!--无映射时返回空实例，否则返回-->
+        <setting name="returnInstanceForEmptyRow" value="false"/>
+    </settings>
+
+    <!--配置别名-->
+    <typeAliases>
+        <typeAlias type="com.lsh.demo.pojo.Actor" alias="Actor"/>
+        <package name="com.lsh.demo.pojo"/>
+    </typeAliases>
+
+    <!--类型转换处理，从java->jdbc和从jdbc->java -->
+    <typeHandlers>
+    </typeHandlers>
+
+    <!--插件 Executor,ParameterHandler,ResultSetHandler,StatementHandler-->
+    <!--<plugins>-->
+    <!--</plugins>-->
+
+    <!--实例创建工厂-->
+    <objectFactory type="org.apache.ibatis.reflection.factory.DefaultObjectFactory"/>
+
+    <environments default="dev">
+        <environment id="dev">
+            <!--事务管理方式JDBC：JDBC MANAGER：非JDBC-->
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+        <environment id="prod">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--数据库厂商标识-->
+    <!--设置不同的数据库驱动中DatabaseMetaData.getDatabaseProductName所返回的驱动名称的别名，用在mapper文件中使用(最下面的会覆盖上面的配置)-->
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="MySQL" value="mysql_alias"/>
+        <property name="MySQL" value="mysql"/>
+    </databaseIdProvider>
+
+    <mappers>
+        <package name="com.lsh.demo.mapper"/>
+    </mappers>
+
+
+</configuration>

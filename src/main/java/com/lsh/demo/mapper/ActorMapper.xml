@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lsh.demo.mapper.ActorMapper">
+    <resultMap id="Actor" type="com.lsh.demo.pojo.Actor">
+        <id column="actor_id" property="actorId" javaType="java.lang.Integer"/>
+        <result column="first_name" property="firstName" javaType="string"/>
+        <result column="last_name" property="lastName" javaType="string"/>
+        <result column="last_update" property="lastUpdate" javaType="java.util.Date"/>
+    </resultMap>
+
+    <sql id="actorFields">
+        ${alias}.actor_id,${alias}.first_name,${alias}.last_name,${alias}.last_update
+    </sql>
+
+    <select id="getActorById"
+            parameterType="int"
+            useCache="false"
+            flushCache="false"
+            resultType="Actor"
+            timeout="1000"
+            fetchSize="256"
+            statementType="PREPARED"
+            resultOrdered="false"
+            databaseId="mysql">
+        select
+            <include refid="actorFields"><property name="alias" value="a"/></include>
+        from actor a where actor_id = #{id}
+    </select>
+
+    <insert id="addActor"
+            parameterType="com.lsh.demo.pojo.Actor"
+            useGeneratedKeys="false"
+            keyProperty="actorId"
+            keyColumn="actor_id"
+            statementType="PREPARED">
+        insert into actor (first_name,last_name,last_update)
+          values (#{firstName},#{lastName},#{lastUpdate,javaType=java.util.Date});
+        <selectKey keyColumn="actor_id"
+                   keyProperty="actorId"
+                   order="AFTER"
+                   resultType="integer"
+                   statementType="PREPARED"
+                   databaseId="mysql">
+            select last_insert_id() as actor_id;
+        </selectKey>
+    </insert>
+
+</mapper>
