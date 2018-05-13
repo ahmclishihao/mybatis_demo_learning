@@ -2,15 +2,15 @@ package com.lsh.demo.bean;
 
 public class ReturnBean {
 
-    private static final String OK = "000";
+    private static final String OK = "0";
 
-    private static final String ERROR = "111";
+    private static final String ERROR = "1";
 
     private String code;
 
     private String message;
 
-    private Integer total;
+    private Integer count;
 
     private Object data;
 
@@ -31,7 +31,7 @@ public class ReturnBean {
         ReturnBean returnBean = new ReturnBean();
         returnBean.code = OK;
         returnBean.data = data;
-        returnBean.total = total;
+        returnBean.count = total;
         return returnBean;
     }
 
@@ -64,11 +64,11 @@ public class ReturnBean {
         this.data = data;
     }
 
-    public Integer getTotal() {
-        return total;
+    public Integer getCount() {
+        return count;
     }
 
-    public void setTotal(Integer total) {
-        this.total = total;
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

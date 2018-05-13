@@ -4,6 +4,7 @@ import com.lsh.demo.mapper.FilmMapper;
 import com.lsh.demo.pojo.Film;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,6 +36,11 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public boolean delete(Integer id) {
-        return filmMapper.deleteFilm(id);
+        try {
+            return filmMapper.deleteFilm(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
