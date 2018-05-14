@@ -5,6 +5,11 @@
     <title>电影管理</title>
     <link rel="stylesheet" href="/static/layui/css/layui.css"/>
     <script type="text/javascript" src="/static/layui/layui.all.js"></script>
+    <style>
+        .layui-layer-content {
+            overflow: visible !important;
+        }
+    </style>
 </head>
 <body>
 <div class="layui-container">
@@ -31,12 +36,13 @@
             ,url: '/page' //数据接口
             ,method: 'POST'
             ,page: true //开启分页
+            ,limit: 15
             ,cols: [[ //表头
                 {field: 'filmId', title: 'ID', width:60, sort: true, fixed: 'left'}
                 ,{field: 'title', title: '电影名称', width:200}
                 ,{field: 'description', title: '简介', width:200, sort: true}
                 ,{field: 'releaseYear', title: '上映年代', width:80}
-                ,{field: 'replacementCost', title: '替换费用', width: 80}
+                ,{field: 'replacementCost', title: '票价', width: 80}
                 ,{field: 'rating', title: '等级', width: 80, sort: true}
                 ,{field: 'lastUpdate', title: '更新日期', width: 160, sort: true}
                 ,{field: 'actor', title: '导演', width: 80,templet:'<div>{{d.actor.firstName}}</div>'}
@@ -57,6 +63,26 @@
                     ,shadeClose:true
                     ,content: $('#editorDialog')
                     ,success:function(){
+                        var data = getFilm(obj.data.filmId);
+                        $("[name='filmId']").val(data.filmId);
+                        $("[name='title']").val(data.title);
+                        $("[name='description']").val(data.description);
+                        $("[name='replacementCost']").val(data.replacementCost);
+                        $("[name='releaseYear']").val(data.releaseYear);
+                        $("[name='lastUpdate']").val(data.lastUpdate);
+
+                        // 评级
+                        $("[name='rating'] option").each(function(i,data){
+                           if(data.value === obj.data.rating){
+                               $(this).prop("selected",true);
+                           }
+                        });
+                        // 种类
+                        $("[name='category'] option").each(function(i,data){
+                            if(data.innerHTML === obj.data.category.name){
+                                $(this).prop("selected",true);
+                            }
+                        });
                         var form = layui.form;
                         form.render();
                     }
@@ -70,6 +96,21 @@
                         });
             }
         });
+
+        function getFilm(id){
+            var resultData ;
+            $.ajax({
+                url:'/info'
+                ,type:'POST'
+                ,dataType:'json'
+                ,data:{id:id}
+                ,async:false
+                ,success:function(data){
+                    resultData = data.data;
+                }
+            });
+            return resultData;
+        }
 
         function deleteFilm(id){
             $.post('/delete',{id:id},function(data){

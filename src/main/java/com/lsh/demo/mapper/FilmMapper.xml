@@ -54,7 +54,7 @@
          left join actor a on fa.actor_id = a.actor_id
          left join film_category f2 on f.film_id = f2.film_id
          left join category c2 on f2.category_id = c2.category_id
-        where f.ilm_id = #{id}
+        where f.film_id = #{id}
     </select>
 
     <select id="getFilmAll" resultMap="Film">
