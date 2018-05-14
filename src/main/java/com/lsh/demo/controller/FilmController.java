@@ -7,13 +7,15 @@ import com.lsh.demo.pojo.FilmRatingEnum;
 import com.lsh.demo.service.CategoryService;
 import com.lsh.demo.service.FilmService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,13 @@ public class FilmController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @InitBinder
+    public void initBinder(WebDataBinder webDataBinder) {
+        webDataBinder.registerCustomEditor(Date.class,new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),true));
+        webDataBinder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+    }
+
 
     @GetMapping("/")
     public String main(ModelMap modelMap){
@@ -40,8 +49,7 @@ public class FilmController {
     @ResponseBody
     public Object page(int page,int limit){
         List<Film> all = filmService.findAll();
-        List<Film> pageContext = all
-                                    .stream()
+        List<Film> pageContext = all.stream()
                                     .skip((page - 1) * limit)
                                     .limit(limit)
                                     .collect(Collectors.toList());
@@ -60,6 +68,19 @@ public class FilmController {
     public Object info(int id){
         Film oneById = filmService.findOneById(id);
         return ReturnBean.ok(oneById).msg("操作完成");
+    }
+
+    @RequestMapping("/modify")
+    @ResponseBody
+    public Object modify(Film film){
+        boolean modifyResult = false;
+        try {
+            modifyResult = filmService.modify(film);
+            return ReturnBean.ok(modifyResult).msg("操作完成");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ReturnBean.ok(false).msg("操作完成");
+        }
     }
 
 

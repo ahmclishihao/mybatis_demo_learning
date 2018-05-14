@@ -78,13 +78,20 @@
               <if test="lastUpdate != null">last_update = #{lastUpdate}</if>
           </set>
         where
-          film_id = #{filmId}
+          film_id = #{filmId};
+    </update>
+
+    <update id="updateFilmCategory" >
+        update film_category
+            set category_id = #{categoryId}
+        where film_id = #{filmId};
     </update>
 
     <insert id="insertFilm" parameterType="com.lsh.demo.pojo.Film" useGeneratedKeys="true" keyProperty="filmId" keyColumn="film_id">
         insert into film
         (title,description,release_year,replacement_cost,rating,last_update)
         values (#{title},#{description},#{releaseYear},#{replacementCost},#{rating},#{lastUpdate});
+
         <selectKey keyColumn="film_id" keyProperty="filmId" databaseId="mysql" order="AFTER">
             select last_insert_id() as film_id;
         </selectKey>

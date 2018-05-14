@@ -19,6 +19,7 @@
         <property name="mapperLocations" value="classpath:com/lsh/demo/mapper/*.xml"/>
         <property name="databaseIdProvider" ref="databaseIdProvider"/>
         <property name="typeAliasesPackage" value="com.lsh.demo.pojo"/>
+        <property name="plugins" ref="pageInterceptor"/>
     </bean>
 
     <!--代替了mybatis自己的配置文件中的setting-->
@@ -47,6 +48,25 @@
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.lsh.demo.mapper"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!--分页插件-->
+    <bean id="pageInterceptor" class="com.github.pagehelper.PageInterceptor">
+        <property name="properties">
+            <props>
+                <prop key="dialect">com.github.pagehelper.dialect.helper.MySqlDialect</prop>
+                <prop key="helperDialect">mysql</prop>
+                <!--pageSize为0，查询全部的结果-->
+                <prop key="pageSizeZero">true</prop>
+                <!--分页合理化参数-->
+                <prop key="reasonable">true</prop>
+                <prop key="params">
+                    pageNum=pageNum;pageSize=pageSize;count=countSql;reasonable=reasonable;pageSizeZero=pageSizeZero
+                </prop>
+                <!--通过 Mapper 接口参数来传递分页参数-->
+                <prop key="supportMethodsArguments">false</prop>
+            </props>
+        </property>
     </bean>
 
     <!--配置事务驱动-->

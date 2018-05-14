@@ -58,7 +58,7 @@
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button class="layui-btn" lay-submit lay-filter="updateFilm">立即提交</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </div>
@@ -69,9 +69,38 @@
     layui.use(['form','laydate'], function(){
         var form = layui.form;
         var laydate = layui.laydate;
+        var $ = layui.$;
         //监听提交
-        form.on('submit(formDemo)', function(data){
-            layer.msg(JSON.stringify(data.field));
+        form.on('submit(updateFilm)', function(data){
+            var data = data.field;
+            $.ajax({
+                url:'/modify'
+                ,type:'POST'
+                ,data:{
+                    filmId: data.filmId
+                    , title: data.title
+                    , description: data.description
+                    , releaseYear: data.releaseYear
+                    , rating: data.rating
+                    , 'category.categoryId': data.category
+                    , replacementCost: data.replacementCost
+                    , lastUpdate: data.lastUpdate
+                }
+                ,dataType:'json'
+                ,success:function(data){
+                    if(data.code === '0' ){
+                        if(data.data === true){
+                            layer.msg('更新成功');
+                            layer.closeAll();
+                            setTimeout(function(){
+                                $('.layui-laypage-btn').click();
+                            },1000);
+                        }else{
+                            layer.msg('更新失败');
+                        }
+                    }
+                }
+            });
             return false;
         });
 

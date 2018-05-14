@@ -10,7 +10,7 @@ public interface FilmService {
 
     List<Film> findAll();
 
-    boolean modify(Film film);
+    boolean modify(Film film) throws Exception;
 
     boolean add(Film film);
 

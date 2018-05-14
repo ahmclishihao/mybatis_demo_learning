@@ -25,8 +25,13 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public boolean modify(Film film) {
-        return filmMapper.updateFilm(film);
+    @Transactional(rollbackFor = Exception.class)
+    public boolean modify(Film film) throws Exception{
+        filmMapper.updateFilm(film);
+        if(film.getCategory() != null){
+            filmMapper.updateFilmCategory(film.getFilmId(),film.getCategory().getCategoryId());
+        }
+        return true;
     }
 
     @Override
