@@ -53,19 +53,16 @@
     <!--分页插件-->
     <bean id="pageInterceptor" class="com.github.pagehelper.PageInterceptor">
         <property name="properties">
-            <props>
-                <prop key="dialect">com.github.pagehelper.dialect.helper.MySqlDialect</prop>
-                <prop key="helperDialect">mysql</prop>
+            <value>
+                helperDialect=mysql
                 <!--pageSize为0，查询全部的结果-->
-                <prop key="pageSizeZero">true</prop>
+                pageSizeZero=true
                 <!--分页合理化参数-->
-                <prop key="reasonable">true</prop>
-                <prop key="params">
-                    pageNum=pageNum;pageSize=pageSize;count=countSql;reasonable=reasonable;pageSizeZero=pageSizeZero
-                </prop>
+                reasonable=true
+                <!--params=pageNum=pageNum;pageSize=pageSize;count=countSql;reasonable=reasonable;pageSizeZero=pageSizeZero-->
                 <!--通过 Mapper 接口参数来传递分页参数-->
-                <prop key="supportMethodsArguments">false</prop>
-            </props>
+                supportMethodsArguments=false
+            </value>
         </property>
     </bean>
 

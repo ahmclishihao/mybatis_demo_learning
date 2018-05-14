@@ -1,5 +1,7 @@
 package com.lsh.demo.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.lsh.demo.bean.ReturnBean;
 import com.lsh.demo.pojo.Category;
 import com.lsh.demo.pojo.Film;
@@ -48,12 +50,10 @@ public class FilmController {
     @PostMapping("/page")
     @ResponseBody
     public Object page(int page,int limit){
-        List<Film> all = filmService.findAll();
-        List<Film> pageContext = all.stream()
-                                    .skip((page - 1) * limit)
-                                    .limit(limit)
-                                    .collect(Collectors.toList());
-        return ReturnBean.page(pageContext,all.size()).msg("查询成功");
+        PageInfo<Film> pageResult = filmService.page(page, limit);
+        List<Film> pageContext = pageResult.getList();
+        long total = pageResult.getTotal();
+        return ReturnBean.page(pageContext,total).msg("查询成功");
     }
 
     @RequestMapping("/delete")

@@ -12,6 +12,7 @@
         <result property="replacementCost" column="replacement_cost"/>
         <result property="rating" column="rating" javaType="com.lsh.demo.pojo.FilmRatingEnum"/>
         <result property="lastUpdate" column="last_update"/>
+        <!--这种写法会造成映射折叠-->
         <association property="actor" column="actor_id" columnPrefix="actor_" resultMap="Actor"/>
         <association property="category" column="category_id" columnPrefix="category_" resultMap="Category"/>
     </resultMap>
@@ -37,16 +38,18 @@
         ,f.replacement_cost
         ,f.rating
         ,f.last_update
+
         ,a.actor_id    actor_actor_id
         ,a.first_name  actor_first_name
         ,a.last_name   actor_last_name
         ,a.last_update actor_last_update
+
         ,c2.category_id category_category_id
         ,c2.name as     category_name
         ,c2.last_update categroy_last_update
     </sql>
 
-    <select id="getFilmById" parameterType="integer" resultMap="Film">
+    <select id="getFilmById" parameterType="integer" resultMap="Film" >
         select
          <include refid="allFields"></include>
          from film f
@@ -65,6 +68,7 @@
         left join actor a on fa.actor_id = a.actor_id
         left join film_category f2 on f.film_id = f2.film_id
         left join category c2 on f2.category_id = c2.category_id
+        group by f.film_id
     </select>
 
     <update id="updateFilm" parameterType="Film" >

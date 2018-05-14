@@ -10,7 +10,7 @@ public class ReturnBean {
 
     private String message;
 
-    private Integer count;
+    private Long count;
 
     private Object data;
 
@@ -27,7 +27,7 @@ public class ReturnBean {
         returnBean.data = data;
         return returnBean;
     }
-    public static ReturnBean page(Object data,Integer total){
+    public static ReturnBean page(Object data,Long total){
         ReturnBean returnBean = new ReturnBean();
         returnBean.code = OK;
         returnBean.data = data;
@@ -64,11 +64,11 @@ public class ReturnBean {
         this.data = data;
     }
 
-    public Integer getCount() {
+    public Long getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 }

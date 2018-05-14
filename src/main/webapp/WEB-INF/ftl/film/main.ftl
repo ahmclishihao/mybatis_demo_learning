@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-<div class="layui-container">
+<div class="">
     <div class="layui-row">
         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
             <table id="filmTable" lay-filter="filmTableFilter"></table>
